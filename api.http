@@ -1,1 +1,23 @@
 ### Rotas Sistemas de Biblioteca
+### AUTORES
+### GET - Listar todos os autores
+GET /api/autores         
+
+### GET - Buscar autor por IDT
+GET /api/autores/:id      
+
+### POST - Criar novo autor
+POST /api/autores
+Content-Type: application/json
+
+{
+}
+
+### PUT - Atualizar autor
+PUT /api/autores/:id
+Content-Type: application/json
+
+{}
+
+### DELETE - Deletar autor
+DELETE /api/autores/:id       

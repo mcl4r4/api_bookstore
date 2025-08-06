@@ -6,6 +6,10 @@ import {conn} from "./config/sequelize.js"
 
 import autorModel from "./models/autorModel.js";
 
+// ROTAS
+
+import autorRoutes from "./routes/autorRoutes.js"
+
 const app = express()
 
 app.use(cors({
@@ -19,6 +23,8 @@ app.use(express.json())
 conn.sync().then(() => {
     console.log("Banco de dados conectado 😎")
 }).catch((error) => console.log(error))
+
+app.use("/api/autores", autorRoutes)
 
 app.get("/", (request, response) => {
     response.status(200).json({messagem: "Olá, Mundo!"})
