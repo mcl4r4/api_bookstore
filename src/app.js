@@ -2,6 +2,10 @@ import express from "express";
 import cors from "cors";
 import {conn} from "./config/sequelize.js"
 
+// TABELAS
+
+import autorModel from "./models/autorModel.js";
+
 const app = express()
 
 app.use(cors({
@@ -12,7 +16,9 @@ app.use(cors({
 
 app.use(express.json())
 
-conn.sync()
+conn.sync().then(() => {
+    console.log("Banco de dados conectado 😎")
+}).catch((error) => console.log(error))
 
 app.get("/", (request, response) => {
     response.status(200).json({messagem: "Olá, Mundo!"})
