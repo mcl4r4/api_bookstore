@@ -2,48 +2,48 @@ import autorModel from "../models/autorModel.js";
 
 
 export const cadastrarAutor = async (request, response) => {
-    const {nome, biografia, data_nascimento, nacionalidade} = request.body;
+    const { nome, biografia, data_nascimento, nacionalidade } = request.body;
 
-    if(!nome){
+    if (!nome) {
         response.status(400).json({
             erro: "Campo nome inválido",
             messagem: "O campo nome não pode ser nulo"
         })
-        return
+        return;
     }
-    if(!biografia){
+    if (!biografia) {
         response.status(400).json({
             erro: "Campo biografia inválido",
             messagem: "O campo biografia não pode ser nulo"
         })
-        return
+        return;
     }
-    if(!data_nascimento){
+    if (!data_nascimento) {
         response.status(400).json({
             erro: "Campo data_nascimento inválido",
             messagem: "O campo data_nascimento não pode ser nulo"
         })
-        return
+        return;
     }
-    if(!nacionalidade){
+    if (!nacionalidade) {
         response.status(400).json({
             erro: "Campo nacionalidade inválido",
             messagem: "O campo nacionalidade não pode ser nulo"
         })
-        return
+        return;
     }
 
     const validaData = new Date(data_nascimento)
-    if(validaData == "Invalid Date"){
+    if (validaData == "Invalid Date") {
         response.status(400).json({
-            erro:"Data Inválida",
+            erro: "Data Inválida",
             messagem: "Formato inválido"
         })
-        return
+        return;
     }
 
     const autor = {
-        nome, 
+        nome,
         biografia,
         data_nascimento,
         nacionalidade
@@ -51,10 +51,35 @@ export const cadastrarAutor = async (request, response) => {
     try {
 
         const novoAutor = await autorModel.create(autor);
-        response.status(201).json({messagem: "Autor criado com sucesso", novoAutor});
-        
+        response.status(201).json({ messagem: "Autor criado com sucesso", novoAutor });
+
     } catch (error) {
         console.error(error)
-        response.status(500).josn({messagem: "Erro interno ao cadastrar autor"})
+        response.status(500).json({ messagem: "Erro interno ao cadastrar autor" })
+    }
+}
+
+export const listarTodosAutores = async (request, response) => {
+    const page = parseInt(request.query.page) || 1
+    const limit = parseInt(request.query.limit) || 10
+    const offset = (page - 1) * limit
+
+    try {
+        const autores = await autorModel.findAndCountAll({
+            offset: 4,
+            limit
+        })
+        const totalPaginas = Math.ceil(autores.count / limit)
+        response.status(200).json({
+            totalAutores: autores.count,
+            totalPaginas,
+            paginaAtual: page,
+            autoresPorPagina: limit,
+            autores: autores.rows
+        })
+
+    } catch (error) {
+        console.log(error)
+        response.status(500).json({ messagem: "Erro interno ao listar autores" })
     }
 }

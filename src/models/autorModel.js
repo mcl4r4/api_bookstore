@@ -17,7 +17,7 @@ const autorModel = conn.define(
             type: DataTypes.STRING,
             allowNull: false
         },
-        dataNascimento: {
+        data_nascimento: {
             type: DataTypes.DATEONLY,
             allowNull: false
         },
