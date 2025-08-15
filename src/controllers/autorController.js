@@ -1,6 +1,6 @@
 import { request, response } from "express";
 import autorModel from "../models/autorModel.js";
-import { DataTypes, where } from "sequelize";
+import { DataTypes } from "sequelize";
 
 
 export const cadastrarAutor = async (request, response) => {
@@ -186,10 +186,8 @@ try {
             return;
         }
 
-        await autorModel.destroy({where: {id}}) 
-
-        response.status(204).send()
-        
+       await autorModel.destroy({where:{id}})
+       response.status(204).send()
 } catch (error) {
     response.status(500).json({messagem: "Erro interno ao deletar autor"})
 
