@@ -23,3 +23,29 @@ e interações sociais.
   "createdAt": "datetime",
   "updatedAt": "datetime"
 }
+
+## Sprint 2 - Módulo Livros
+
+### Funcionalidades
+
+- Cadastro de livros vinculados a autores
+- Listagem de livros (com filtros e paginação)
+- Busca por livro específico
+- Atualização de dados do livro
+- Remoção de livro
+- Relacionamento Many-to-Many com autores
+
+### Estrutura do Modelo Livro
+{
+  "id": "string/number",
+  "titulo": "string",
+  "isbn": "string",
+  "descricao": "string",
+  "anoPublicacao": "number",
+  "genero": "string",
+  "quantidadeTotal": "number",
+  "quantidadeDisponivel": "number",
+  "autores": ["array of author ids"],
+  "createdAt": "datetime",
+  "updatedAt": "datetime"
+}
