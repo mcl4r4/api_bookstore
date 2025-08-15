@@ -1,6 +1,6 @@
 import { request, response } from "express";
 import autorModel from "../models/autorModel.js";
-import { DataTypes } from "sequelize";
+import { DataTypes, where } from "sequelize";
 
 
 export const cadastrarAutor = async (request, response) => {
@@ -168,4 +168,30 @@ export const atualizarAutor = async (request, response) => {
     } catch (error) {
         response.status(500).json({messagem: "Erro interno ao atualizar autor"})
     }
+}
+
+export const deletarAutor = async (request, response) => {
+const {id} = request.params;
+
+if(!id){
+    response.status(400).json({messagem:"ID inválido"})
+}
+
+try {
+
+    const autorSelecionado = await autorModel.findByPk(id)
+
+        if(!autorSelecionado){
+            response.status(404).json({messagem: "Autor não encontrado"})
+            return;
+        }
+
+        await autorModel.destroy({where: {id}}) 
+
+        response.status(204).send()
+        
+} catch (error) {
+    response.status(500).json({messagem: "Erro interno ao deletar autor"})
+
+}
 }
