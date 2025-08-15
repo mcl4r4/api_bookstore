@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import {conn} from "./config/sequelize.js"
+import {conn} from "./config/sequelize.js";
 
 // TABELAS
 
@@ -8,7 +8,7 @@ import autorModel from "./models/autorModel.js";
 
 // ROTAS
 
-import autorRoutes from "./routes/autorRoutes.js"
+import autorRoutes from "./routes/autorRoutes.js";
 
 const app = express()
 

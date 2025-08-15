@@ -6,7 +6,7 @@ const autorModel = conn.define(
     {
         id: {
             type: DataTypes.UUID,
-            toDefaultValue: DataTypes.UUIDV4,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true
         },
         nome: {

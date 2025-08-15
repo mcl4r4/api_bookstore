@@ -1,5 +1,5 @@
 import { Router} from "express"
-import {cadastrarAutor, listarTodosAutores} from "../controllers/autorController.js"
+import {buscarAutorPorId, cadastrarAutor, listarTodosAutores} from "../controllers/autorController.js"
 
 
 const router = Router()
@@ -7,6 +7,8 @@ const router = Router()
 router.post("/", cadastrarAutor)
 
 router.get("/", listarTodosAutores)
+
+router.get("/:id", buscarAutorPorId)
 
 
 export default router;

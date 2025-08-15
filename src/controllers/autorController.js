@@ -1,4 +1,6 @@
+import { request, response } from "express";
 import autorModel from "../models/autorModel.js";
+import { DataTypes } from "sequelize";
 
 
 export const cadastrarAutor = async (request, response) => {
@@ -51,6 +53,7 @@ export const cadastrarAutor = async (request, response) => {
     try {
 
         const novoAutor = await autorModel.create(autor);
+        console.log(novoAutor)
         response.status(201).json({ messagem: "Autor criado com sucesso", novoAutor });
 
     } catch (error) {
@@ -66,7 +69,7 @@ export const listarTodosAutores = async (request, response) => {
 
     try {
         const autores = await autorModel.findAndCountAll({
-            offset: 4,
+            offset,
             limit
         })
         const totalPaginas = Math.ceil(autores.count / limit)
@@ -83,3 +86,27 @@ export const listarTodosAutores = async (request, response) => {
         response.status(500).json({ messagem: "Erro interno ao listar autores" })
     }
 }
+
+export const buscarAutorPorId = async (request, response) => {
+    const {id} = request.params;
+
+    if(!id){
+        response.status(400).json({messagem: "ID inválido"})
+    }
+    try {
+        const autorSelecionado = await autorModel.findByPk(id)
+
+        if(!autorSelecionado){
+            response.status(404).json({messagem: "Autor não encontrado"})
+        }
+
+        response.status(200).json({
+            messagem: "Autor encontrado",
+            autorSelecionado
+        })
+    } catch (error) {
+        response.status(500).json({messagem: "Erro interno ao encontrar autor"})
+        console.log(error)
+    }
+}
+
