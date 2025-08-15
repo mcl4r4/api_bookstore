@@ -92,12 +92,14 @@ export const buscarAutorPorId = async (request, response) => {
 
     if(!id){
         response.status(400).json({messagem: "ID inválido"})
+        return;
     }
     try {
         const autorSelecionado = await autorModel.findByPk(id)
 
         if(!autorSelecionado){
             response.status(404).json({messagem: "Autor não encontrado"})
+            return;
         }
 
         response.status(200).json({
@@ -110,3 +112,60 @@ export const buscarAutorPorId = async (request, response) => {
     }
 }
 
+export const atualizarAutor = async (request, response) => {
+    const {id} = request.params;
+    const {nome, biografia, data_nascimento, nacionalidade} = request.body;
+
+    if(!id){
+        response.status(400).json({messagem: "ID inválido"})
+        return;
+    }
+
+    if(!nome){
+        response.status(400).json({messagem: "Campo nome obrigátorio"})
+        return;
+    }
+    if(!biografia){
+        response.status(400).json({messagem: "Campo biografia obrigátorio"})
+        return;
+    }
+    if(!data_nascimento){
+        response.status(400).json({messagem: "Campo data_nascimento obrigátorio"})
+        return;
+    }
+    if(!nacionalidade){
+        response.status(400).json({messagem: "Campo nacionalidade obrigátorio"})
+        return;
+    }
+
+    try {
+         const autorSelecionado = await autorModel.findByPk(id)
+
+        if(!autorSelecionado){
+            response.status(404).json({messagem: "Autor não encontrado"})
+            return;
+        }
+
+        if(!nome !== undefined){
+            autorSelecionado.nome = nome
+        }
+        if(!biografia !== undefined){
+            autorSelecionado.biografia = biografia
+        }
+        if(!data_nascimento !== undefined){
+            autorSelecionado.data_nascimento = data_nascimento
+        }
+        if(!nacionalidade !== undefined){
+            autorSelecionado.nacionalidade = nacionalidade
+        }
+
+        await autorSelecionado.save()
+
+        response.status(200).json({
+            messagem: "Autor atualizado",
+            autor: autorSelecionado
+        })
+    } catch (error) {
+        response.status(500).json({messagem: "Erro interno ao atualizar autor"})
+    }
+}
