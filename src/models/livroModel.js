@@ -2,11 +2,11 @@ import { DataTypes } from "sequelize";
 import { conn } from "../config/sequelize.js";
 
 const livroModel = conn.define(
-    "livro",
+    "livros",
     {
         id: {
-            type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4,
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
             primaryKey: true
         },
         titulo: {
@@ -22,7 +22,7 @@ const livroModel = conn.define(
             allowNull: false
         },
         ano_publicacao: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DATEONLY,
             allowNull: false
         },
         genero: {
@@ -37,14 +37,14 @@ const livroModel = conn.define(
         quantidade_disponivel: {
             type: DataTypes.INTEGER,
             allowNull: false
-        },
-        autores:{
-            type:DataTypes.UUID
-            defaultValue: DataTypes.UUIDV4,
-            
-        },
+        }
     },
-    {}
-)
+    {
+        timestamps: true,
+        tableName: "livros",
+        createdAt: "created_at",
+        updatedAt: "updated_at"
+    }
+);
 
-export default livroModel
+export default livroModel;

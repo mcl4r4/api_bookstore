@@ -4,11 +4,12 @@ import {conn} from "./config/sequelize.js";
 
 // TABELAS
 
-import autorModel from "./models/autorModel.js";
+import './models/association.js'
 
 // ROTAS
 
 import autorRoutes from "./routes/autorRoutes.js";
+import livroRoutes from "./routes/livroRoutes.js"
 
 const app = express()
 
