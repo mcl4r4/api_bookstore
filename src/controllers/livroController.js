@@ -1,3 +1,4 @@
+import { request, response } from "express";
 import { autorModel, livroModel } from "../models/association.js"
 
 export const cadastrarLivro = async (resquest, response) => {
@@ -152,8 +153,8 @@ export const BuscarLivros = async (request, response) => {
             },
         });
 
-        if(!livro){
-            response.status(404).json({message: "Livro não encontrado"})
+        if (!livro) {
+            response.status(404).json({ message: "Livro não encontrado" })
             return;
         }
 
@@ -165,32 +166,79 @@ export const BuscarLivros = async (request, response) => {
 }
 
 export const buscarLivrosPorAutor = async (request, response) => {
-    const {autor_id} = request.query;
+    const { autor_id } = request.query;
 
-    if(!autor_id){
-        response.status(400).json({message: "Erro ao achar ID"})
+    if (!autor_id) {
+        response.status(400).json({ message: "Erro ao achar ID" })
         return;
     }
     try {
 
         const livro = await livroModel.findByPk(autor_id, {
-               include: {
+            include: {
                 model: autorModel,
                 through: { attributes: [] },
                 attributes: { exclude: ["created_at", "updated_at"] }
             },
         })
 
-        if(!autor_id){
-            response.status(404).json({message: "Autor não encontrado"})
+        if (!autor_id) {
+            response.status(404).json({ message: "Autor não encontrado" })
             return
         }
 
         response.status(200).json(livro)
-        
+
     } catch (error) {
-        response.status(500).json({message: "Erro ao buscar livros por id"})
+        response.status(500).json({ message: "Erro ao buscar livros por id" })
         console.log(error)
     }
 
+}
+
+export const atualizarLivro = async (request, response) => {
+    const { id } = request.params;
+    const {
+        titulo,
+        isbn,
+        descricao,
+        ano_publicacao,
+        genero,
+        quantidade_total,
+        quantidade_disponivel,
+        autores
+    } = request.body;
+
+    if (!id) {
+        response.status(400).json({ message: "ID obrigátorio" })
+        return
+    }
+
+
+    try {
+        const livro = await livroModel.findByPk(id, {
+            attributes: { exclude: ["created_at", "updated_at"] },
+            include: {
+                model: autorModel,
+                through: { attributes: [] },
+                attributes: { exclude: ["created_at", "updated_at"] }
+            },
+        });
+
+        livro.titulo = titulo
+        livro.isbn = isbn
+        livro.descricao = descricao
+        livro.ano_publicacao = ano_publicacao
+        livro.genero = genero
+        livro.quantidade_total = quantidade_total
+        livro.quantidade_disponivel = quantidade_disponivel
+        livro.autores = autores
+
+        await livro.save()
+
+        response.status(200).jsom({message: "Livro atualizado"})
+    } catch (error) {
+        response.status(500).json({ message: "Erro interno ao atualizar livro" })
+        console.log(error)
+    }
 }
