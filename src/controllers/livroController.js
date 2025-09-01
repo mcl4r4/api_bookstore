@@ -133,3 +133,34 @@ export const listarTodosLivros = async (request, response) => {
         console.log(error)
     }
 }
+
+export const BuscarLivros = async (request, response) => {
+    const { id } = request.params;
+
+    if (!id) {
+        response.status(400).json({ message: "ID obrigátorio" })
+        return
+    }
+
+    try {
+        const livro = await livroModel.findByPk(id, {
+            attributes: { exclude: ["created_at", "updated_at"] },
+            include: {
+                model: autorModel,
+                through: { attributes: [] },
+                attributes: { exclude: ["created_at", "updated_at"] }
+            },
+        });
+
+        if(!livro){
+            response.status(404).json({message: "Livro não encontrado"})
+            return;
+        }
+
+        response.status(200).json(livro)
+    } catch (error) {
+        response.status(500).json({ message: "Erro ao bucar livro" })
+        console.log(error)
+    }
+}
+
