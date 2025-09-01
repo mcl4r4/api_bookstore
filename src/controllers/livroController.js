@@ -164,3 +164,33 @@ export const BuscarLivros = async (request, response) => {
     }
 }
 
+export const buscarLivrosPorAutor = async (request, response) => {
+    const {autor_id} = request.query;
+
+    if(!autor_id){
+        response.status(400).json({message: "Erro ao achar ID"})
+        return;
+    }
+    try {
+
+        const livro = await livroModel.findByPk(autor_id, {
+               include: {
+                model: autorModel,
+                through: { attributes: [] },
+                attributes: { exclude: ["created_at", "updated_at"] }
+            },
+        })
+
+        if(!autor_id){
+            response.status(404).json({message: "Autor não encontrado"})
+            return
+        }
+
+        response.status(200).json(livro)
+        
+    } catch (error) {
+        response.status(500).json({message: "Erro ao buscar livros por id"})
+        console.log(error)
+    }
+
+}
