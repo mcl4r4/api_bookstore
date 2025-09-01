@@ -86,3 +86,50 @@ export const cadastrarLivro = async (resquest, response) => {
         console.log(error)
     }
 };
+
+export const listarTodosLivros = async (request, response) => {
+    const page = parseInt(resquest.query.page) || 1;
+    const limit = parseInt(resquest.query.page) || 10;
+    const offset = (page - 1) * limit;
+
+    try {
+        const livro = await livroModel.findAndCountAll({
+            include: {
+                model: autorModel,
+                through: { attributes: [] }
+
+            },
+            limit,
+            offset
+        })
+
+        const livrosFormatados = livro.rows.map((livro) => {
+            return {
+                id: livro.id,
+                titulo: livro.titulo,
+                isbn: livro.isbn,
+                descricao: livro.descricao,
+                ano_publicacao: livro.ano_publicacao,
+                genero: livro.genero,
+                quantidade_total: livro.quantidade_total,
+                quantidade_disponivel: livro.quantidade_disponivel,
+                autores: livro.autores.map(() => ({
+                    id: autor.id,
+                    nome: autor.nome
+                }))
+            }
+        })
+
+        const totalDePaginas = Math.ceil(livro.count / limit)
+
+        response.status(200).json({
+            totalLivros: livro.count,
+            totalPaginas: totalDePaginas,
+            livrosPorPagina: limit,
+            livros: livrosFormatados
+        })
+    } catch (error) {
+        response.status(500).json({ message: "Erro ao lista livros" })
+        console.log(error)
+    }
+}

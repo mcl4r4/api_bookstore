@@ -26,6 +26,7 @@ conn.sync().then(() => {
 }).catch((error) => console.log(error))
 
 app.use("/api/autores", autorRoutes)
+app.use("api/livros", livroRoutes)
 
 app.get("/", (request, response) => {
     response.status(200).json({messagem: "Olá, Mundo!"})
