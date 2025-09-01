@@ -242,3 +242,30 @@ export const atualizarLivro = async (request, response) => {
         console.log(error)
     }
 }
+
+export const deletarLivro = async (request, response) => {
+    const {id} = request.params;
+
+    if(!id) {
+        response.status(400).json({message: "ID obrigátorio"})
+        return
+    }
+
+    try {
+        const livro = await livroModel.findByPk(id, {
+             attributes: { exclude: ["created_at", "updated_at"] },
+            include: {
+                model: autorModel,
+                through: { attributes: [] },
+                attributes: { exclude: ["created_at", "updated_at"] }
+            },
+        })
+
+        await livroModel.destroy({where: {id}})
+
+        response.status(204).send()
+    } catch (error) {
+        response.status(500).json({message: "Erro interno ao deletar livro"})
+        console.log(error)
+    }
+}
